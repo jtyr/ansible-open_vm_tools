@@ -1,0 +1,83 @@
+---
+
+- name: Test distribution
+  assert:
+    that: >
+      ansible_os_family == "RedHat"
+
+- name: Check if VMware Tools are installed via RPM
+  shell: rpm -qa | grep vmware-tools-esx
+  register: open_vm_tools_uninstall_vt_rpms
+  when: open_vm_tools_uninstall_vt
+  changed_when: false
+  failed_when: false
+  tags:
+    - open_vm_tools_uninstall_vt
+
+- name: Uninstall VMware Tools with all its dependencies if they are installed via RPM
+  shell: /usr/bin/yum -y --setopt clean_requirements_on_remove=1 remove {{ open_vm_tools_uninstall_vt_rpms_pkgs | join(' ') }}
+  when: open_vm_tools_uninstall_vt and open_vm_tools_uninstall_vt_rpms.rc == 0
+  tags:
+    - open_vm_tools_uninstall_vt
+
+- name: Check if VMware Tools are installed manually
+  stat:
+    path: "{{ open_vm_tools_uninstall_vt_manual_installer }}"
+  when: open_vm_tools_uninstall_vt
+  register: open_vm_tools_uninstall_vt_manual
+  changed_when: false
+  failed_when: false
+  tags:
+    - open_vm_tools_uninstall_vt
+
+- name: Uninstall VMware Tools if they are installed manually
+  shell: "{{ open_vm_tools_uninstall_vt_manual_installer }} uninstall"
+  register: open_vm_tools_uninstall_vt_rpms
+  when: open_vm_tools_uninstall_vt and open_vm_tools_uninstall_vt_manual.stat.exists
+  tags:
+    - open_vm_tools_uninstall_vt
+
+- name: Install Open VM Tools
+  yum:
+    name: "{{ open_vm_tools_pkg }}"
+    state: present
+  notify:
+    - Restart Open VM Tools services
+  tags:
+    - open_vm_tools_pkg
+
+- name: Install VMware deployPkg Tools plug-in YUM repo file
+  yumrepo:
+    name: vmware-tools
+    baseurl: "{{ open_vm_tools_plugin_deploypkg_yumrepo_url }}"
+    gpgkey: "{{ open_vm_tools_plugin_deploypkg_gpgkey_url }}"
+    gpgcheck: yes
+    params: "{{ open_vm_tools_plugin_deploypkg_yumrepo_params }}"
+  tags:
+    - open_vm_tools_pkg
+  when: open_vm_tools_plugin_deploypkg_install
+
+- name: Install VMware deployPkg Tools plug-in package
+  yum:
+    name: "{{ open_vm_tools_plugin_deploypkg_pkg }}"
+    state: present
+  notify:
+    - Restart Open VM Tools services
+  tags:
+    - open_vm_tools_pkg
+  when: open_vm_tools_plugin_deploypkg_install
+
+- name: Make sure the Open VM Tools services is enabled
+  service:
+    name: vmtoolsd
+    enabled: yes
+  tags:
+    - open_vm_tools_config
+
+- name: Make sure the Open VM Tools services is running
+  service:
+    name: vmtoolsd
+    state: started
+  register: open_vm_tools_service_started
+  tags:
+    - open_vm_tools_config
