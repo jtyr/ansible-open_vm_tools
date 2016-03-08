@@ -47,7 +47,7 @@
     - open_vm_tools_pkg
 
 - name: Install VMware deployPkg Tools plug-in YUM repo file
-  yumrepo:
+  yum_repository:
     name: vmware-tools
     baseurl: "{{ open_vm_tools_plugin_deploypkg_yumrepo_url }}"
     gpgkey: "{{ open_vm_tools_plugin_deploypkg_gpgkey_url }}"
