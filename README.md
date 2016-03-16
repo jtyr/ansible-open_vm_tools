@@ -92,13 +92,6 @@ open_vm_tools_plugin_deploypkg_pkg: open-vm-tools-deploypkg
 ```
 
 
-Dependencies
-------------
-
-- [`yumrepo`](https://raw.githubusercontent.com/jtyr/ansible-modules-extras/jtyr-yumrepo_params/packaging/os/yumrepo.py)
-  module (put it into the `library` directory)
-
-
 License
 -------
 
