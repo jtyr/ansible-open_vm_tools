@@ -20,6 +20,15 @@ open_vm_tools_uninstall_vt_rpms_pkgs: "{{
 # Path to the installer when VMware Tools installed manually
 open_vm_tools_uninstall_vt_manual_installer: /etc/vmware-tools/installer.sh
 
+# Whether to install EPEL YUM repo
+open_vm_tools_epel_install: yes
+
+# EPEL YUM repo URL
+open_vm_tools_epel_yumrepo_url: "{{ yumrepo_epel_url | default('https://dl.fedoraproject.org/pub/epel/$releasever/$basearch/') }}"
+
+# Additional EPEL params
+open_vm_tools_epel_yumrepo_params: {}
+
 # Open VM Tools package (you can specify exact version here)
 open_vm_tools_pkg: open-vm-tools
 
@@ -30,11 +39,11 @@ open_vm_tools_plugin_deploypkg_install: no
 # (RHEL7 package works also on RHEL6, x86_64 only supported)
 open_vm_tools_plugin_deploypkg_yumrepo_url: http://packages.vmware.com/packages/rhel7/x86_64/
 
-# Allow to overwrite the YUM repo parameters
-open_vm_tools_plugin_deploypkg_yumrepo_params: {}
-
 # URL of the GPG key for the RPM packages from the YUM repo
 open_vm_tools_plugin_deploypkg_gpgkey_url: http://packages.vmware.com/tools/keys/VMWARE-PACKAGING-GPG-RSA-KEY.pub
+
+# Allow to overwrite the YUM repo parameters
+open_vm_tools_plugin_deploypkg_yumrepo_params: {}
 
 # Packege containing the VMware deployPkg Tools plug-in
 # (you can specify exact version here)

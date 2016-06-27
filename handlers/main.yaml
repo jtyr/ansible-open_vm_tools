@@ -4,4 +4,6 @@
   service:
     name: vmtoolsd
     state: restarted
-  when: not open_vm_tools_service_started.changed
+  when: >
+    open_vm_tools_service_started is not defined or
+    not open_vm_tools_service_started.changed
