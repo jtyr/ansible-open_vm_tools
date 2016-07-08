@@ -27,7 +27,7 @@ open_vm_tools_epel_install: yes
 open_vm_tools_epel_yumrepo_url: "{{ yumrepo_epel_url | default('https://dl.fedoraproject.org/pub/epel/$releasever/$basearch/') }}"
 
 # Additional EPEL params
-open_vm_tools_epel_yumrepo_params: {}
+open_vm_tools_epel_yumrepo_params: "{{ yumrepo_epel_params | default({}) }}"
 
 # Open VM Tools package (you can specify exact version here)
 open_vm_tools_pkg: open-vm-tools
