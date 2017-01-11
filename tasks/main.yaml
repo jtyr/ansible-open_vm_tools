@@ -42,16 +42,15 @@
     name: epel
     description: EPEL YUM repo
     baseurl: "{{ open_vm_tools_epel_yumrepo_url }}"
-    gpgcheck: no
+    gpgkey: "{{ open_vm_tools_epel_yumrepo_gpgkey }}"
     params: "{{ open_vm_tools_epel_yumrepo_params }}"
   when: open_vm_tools_epel_install
   tags:
     - open_vm_tools_pkg
 
 - name: Install Open VM Tools
-  yum:
+  package:
     name: "{{ open_vm_tools_pkg }}"
-    state: present
   notify:
     - Restart Open VM Tools services
   tags:
@@ -69,9 +68,8 @@
   when: open_vm_tools_plugin_deploypkg_install
 
 - name: Install VMware deployPkg Tools plug-in package
-  yum:
+  package:
     name: "{{ open_vm_tools_plugin_deploypkg_pkg }}"
-    state: present
   notify:
     - Restart Open VM Tools services
   tags:
