@@ -8,7 +8,7 @@
 - name: Check if VMware Tools are installed via RPM
   shell: rpm -qa | grep vmware-tools-esx
   register: open_vm_tools_uninstall_vt_rpms
-  when: open_vm_tools_uninstall_vt
+  when: open_vm_tools_uninstall_vt == true
   changed_when: false
   failed_when: false
   tags:
@@ -23,7 +23,7 @@
 - name: Check if VMware Tools are installed manually
   stat:
     path: "{{ open_vm_tools_uninstall_vt_manual_installer }}"
-  when: open_vm_tools_uninstall_vt
+  when: open_vm_tools_uninstall_vt == true
   register: open_vm_tools_uninstall_vt_manual
   changed_when: false
   failed_when: false
@@ -44,7 +44,7 @@
     baseurl: "{{ open_vm_tools_epel_yumrepo_url }}"
     gpgkey: "{{ open_vm_tools_epel_yumrepo_gpgkey }}"
     params: "{{ open_vm_tools_epel_yumrepo_params }}"
-  when: open_vm_tools_epel_install
+  when: open_vm_tools_epel_install == true
   tags:
     - open_vm_tools_pkg
 
@@ -65,7 +65,7 @@
     params: "{{ open_vm_tools_plugin_deploypkg_yumrepo_params }}"
   tags:
     - open_vm_tools_pkg
-  when: open_vm_tools_plugin_deploypkg_install
+  when: open_vm_tools_plugin_deploypkg_install == true
 
 - name: Install VMware deployPkg Tools plug-in package
   package:
@@ -74,7 +74,7 @@
     - Restart Open VM Tools services
   tags:
     - open_vm_tools_pkg
-  when: open_vm_tools_plugin_deploypkg_install
+  when: open_vm_tools_plugin_deploypkg_install == true
 
 - name: Make sure the Open VM Tools services is enabled
   service:
