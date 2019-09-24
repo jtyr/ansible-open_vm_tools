@@ -3,7 +3,7 @@
 - name: Test distribution
   assert:
     that: >
-      ansible_os_family == "RedHat"
+      ansible_facts.os_family == "RedHat"
 
 - name: Check if VMware Tools are installed via RPM
   shell: rpm -qa | grep vmware-tools-esx
