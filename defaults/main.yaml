@@ -20,8 +20,8 @@ open_vm_tools_uninstall_vt_rpms_pkgs: "{{
 # Path to the installer when VMware Tools installed manually
 open_vm_tools_uninstall_vt_manual_installer: /etc/vmware-tools/installer.sh
 
-# Whether to install EPEL YUM repo
-open_vm_tools_epel_install: "{{ yumrepo_epel_install | default(true) }}"
+# Whether to install EPEL YUM repo (yes by default for RHEL/CentOS 6)
+open_vm_tools_epel_install: "{{ yumrepo_epel_install | default(true if ansible_facts.distribution_major_version | int == 6 else false) }}"
 
 # EPEL YUM repo URL
 open_vm_tools_epel_yumrepo_url: "{{ yumrepo_epel_url | default('https://dl.fedoraproject.org/pub/epel/$releasever/$basearch/') }}"
